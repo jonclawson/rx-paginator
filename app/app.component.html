@@ -1,0 +1,71 @@
+<div class="container">
+  <div class="row" *ngIf="response">
+    <div class="col-12">
+      <h1>RxPaginator</h1>
+    </div>
+    <div class="col-8"></div>
+    <div class="col-4">
+      <button class="form-control" [ngClass]="{'btn btn-danger': hasFilters}" (click)="pager.clearFilters()">
+        Clear Filters
+      </button>
+    </div>
+    <div class="col-12">
+      <table class="table">
+        <tr>
+          <th>
+            <span style="cursor: pointer" (click)="pager.sort('id')">ID</span>
+            <input
+              class="form-control"
+              placeholder="Filter ID"
+              (input)="pager.filter('id', filters.id)"
+              [(ngModel)]="filters.id"
+            />
+          </th>
+          <th>
+            <span style="cursor: pointer" (click)="pager.sort('name')"
+              >Name</span
+            >
+            <input
+              class="form-control"
+              placeholder="Filter Name"
+              (input)="pager.filter('name', filters.name)"
+              [(ngModel)]="filters.name"
+            />
+          </th>
+        </tr>
+
+        <tr *ngFor="let hero of response.data">
+          <td>
+            {{ hero.id }}
+          </td>
+          <td>
+            {{ hero.name }}
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-auto">
+      <button class="form-control" (click)="pager.prevPage()">Previous</button>
+    </div>
+    <div class="col-auto" *ngFor="let n of pages; index as i">
+      <button
+        class="form-control"
+        [ngClass]="{ 'btn btn-primary': response.params.page == n }"
+        (click)="pager.goToPage(n)"
+      >
+        {{ n }}
+      </button>
+    </div>
+    <div class="col-auto">
+      <button class="form-control" (click)="pager.nextPage()">Next</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <br />
+      <p class="alert alert-secondary">
+        {{ response.params | json }}
+      </p>
+    </div>
+  </div>
+</div>
