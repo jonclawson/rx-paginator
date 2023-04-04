@@ -5,7 +5,11 @@
     </div>
     <div class="col-8"></div>
     <div class="col-4">
-      <button class="form-control" [ngClass]="{'btn btn-danger': hasFilters}" (click)="pager.clearFilters()">
+      <button
+        class="form-control"
+        [ngClass]="{ 'btn btn-danger': hasFilters }"
+        (click)="pager.clearFilters()"
+      >
         Clear Filters
       </button>
     </div>
@@ -64,7 +68,7 @@
     <div class="col-12">
       <br />
       <p class="alert alert-secondary">
-        {{ response.params | json }}
+        {{ response?.params | json }}
       </p>
     </div>
   </div>

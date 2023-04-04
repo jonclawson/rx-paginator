@@ -28,11 +28,11 @@ export class AppComponent implements OnInit {
 
   filters = {
     id: '',
-    name: ''
-  }
+    name: '',
+  };
 
   get hasFilters() {
-    return !!Object.values(this.filters).find(f => f != '')
+    return !!Object.values(this.filters).find((f) => f != '');
   }
 
   constructor(private http: HttpClient, private paginator: PaginatorService) {}
@@ -50,8 +50,8 @@ export class AppComponent implements OnInit {
     });
     this.pager.setParams(params);
     this.pager.subscribeToResponse((r) => {
-      this.response = r;
-      if (this.response) {
+      this.response = Object.assign({}, r || {});
+      if (this.response.params) {
         Object.assign(this.filters, this.response.params?.filter);
         if (this.response.params.pages) {
           this.pages = Array(+this.response.params.pages)
