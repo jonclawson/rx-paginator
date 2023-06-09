@@ -13,7 +13,7 @@ export class PaginatorService {
     return new Pager(this.http);
   }
 
-  pageResponse(params: PageParams) {
+  simulatePagedResponse(params: PageParams) {
     return map((d: any[]) => {
       let { page, limit, sort, filter } = params;
 
@@ -22,37 +22,34 @@ export class PaginatorService {
       }
       const offset = (page - 1) * limit;
       const data = d
-          .filter((i) => {
-            if (!filter) {
-              return true;
-            }
-            return !Object.keys(filter).find((k) => {
-              return i[k].includes(filter[k]) === false;
-            });
-          })
-          .sort((a, b) => {
-            if (!sort) {
-              return 0;
-            }
-            const [key, dir] = sort.split(',');
-            if (a[key] > b[key]) {
-              return dir === 'asc' ? 1 : -1;
-            }
-            if (a[key] < b[key]) {
-              return dir === 'asc' ? -1 : 1;
-            }
-            if (a[key] === b[key]) {
-              return 0;
-            }
-          })
-          params.total = data.length;
-          return new PageResponse(
-            data.splice(offset, limit), 
-            { 
-              ...params, 
-              pages: Math.ceil(params.total / params.limit) 
-            }
-          );
+        .filter((i) => {
+          if (!filter) {
+            return true;
+          }
+          return !Object.keys(filter).find((k) => {
+            return i[k].includes(filter[k]) === false;
+          });
+        })
+        .sort((a, b) => {
+          if (!sort) {
+            return 0;
+          }
+          const [key, dir] = sort.split(',');
+          if (a[key] > b[key]) {
+            return dir === 'asc' ? 1 : -1;
+          }
+          if (a[key] < b[key]) {
+            return dir === 'asc' ? -1 : 1;
+          }
+          if (a[key] === b[key]) {
+            return 0;
+          }
+        });
+      params.total = data.length;
+      return new PageResponse(data.splice(offset, limit), {
+        ...params,
+        pages: Math.ceil(params.total / params.limit),
+      });
     });
   }
 }

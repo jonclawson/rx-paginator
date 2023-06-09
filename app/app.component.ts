@@ -46,7 +46,9 @@ export class AppComponent implements OnInit {
     };
     this.pager = this.paginator.createPager();
     this.pager.setRequestMethod((params) => {
-      return this.getHeroes().pipe(this.paginator.pageResponse(params));
+      return this.getHeroes()
+      // Remove this line for real paged endpoint.
+      .pipe(this.paginator.simulatePagedResponse(params));
     });
     this.pager.setParams(params);
     this.pager.subscribeToResponse((r) => {
