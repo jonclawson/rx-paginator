@@ -67,7 +67,24 @@
   <div class="row">
     <div class="col-12">
       <br>
-      <pre class="alert alert-secondary">Pager Model:{{ response?.params | json }}</pre>
+      <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"
+            (click)="show = !show">
+              Show Pager Model
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse" 
+          [ngClass]="{'show': show}" data-bs-parent="#accordionExample">
+            <div class="accordion-body alert alert-secondary">
+            <pre class="">{{ response?.params | json }}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
+
