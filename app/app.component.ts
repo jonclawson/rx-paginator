@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
 import { PaginatorService } from './pageinator/pageinator.service';
 import { PageResponse } from './pageinator/page-response';
 import { Pager } from './pageinator/pager';
+import { Subscription } from 'rxjs';
 
 export interface Hero {
   id: number;
@@ -15,10 +16,12 @@ export interface Hero {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   private heroes: PageResponse;
 
   private heroesUrl = 'api/heroes'; // URL to web api
+
+  private subscriptions: Subscription[] = [];
 
   response: any;
 
@@ -46,12 +49,14 @@ export class AppComponent implements OnInit {
     };
     this.pager = this.paginator.createPager();
     this.pager.setRequestMethod((params) => {
-      return this.getHeroes()
-      // Remove this line for real paged endpoint.
-      .pipe(this.paginator.simulatePagedResponse(params));
+      return (
+        this.getHeroes()
+          // Remove this line for real paged endpoint.
+          .pipe(this.paginator.simulatePagedResponse(params))
+      );
     });
     this.pager.setParams(params);
-    this.pager.subscribeToResponse((r) => {
+    const sub = this.pager.subscribeToResponse((r) => {
       this.response = Object.assign({}, r || {});
       if (this.response.params) {
         Object.assign(this.filters, this.response.params?.filter);
@@ -61,6 +66,13 @@ export class AppComponent implements OnInit {
             .map((x, i) => i + 1);
         }
       }
+    });
+    this.subscriptions.push(sub);
+  }
+
+  private ngOnDestroy() {
+    this.subscriptions.forEach((sub: Subscription) => {
+      sub.unsubscribe();
     });
   }
 
